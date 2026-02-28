@@ -1,22 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割交代タイマー</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding-top: 40px;
+}
+#msg {
+  font-size: 2em;
+  margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>役割交代タイマー</h1>
+<div id="msg">準備中…</div>
+
+<audio id="sound">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
 <script>
 const members = ["佐藤","鈴木","田中"];
 const interval = 15 * 60 * 1000;
 
-// ★ 必ず「未来の時刻」にする（今から5分後がおすすめ）
+// 今から5分後に自動スタート（安全）
 const start = new Date(Date.now() + 5 * 60 * 1000);
 
 function update() {
   const msg = document.getElementById("msg");
   const sound = document.getElementById("sound");
 
-  if (!msg) return;
-
   const now = new Date();
   const diff = now - start;
 
   if (diff < 0) {
     const remain = Math.ceil((-diff) / 1000);
-    msg.innerHTML = "開始まで：" + remain + "秒";
+    msg.textContent = "開始まで：" + remain + "秒";
     return;
   }
 
@@ -41,3 +67,6 @@ function update() {
 update();
 setInterval(update, 1000);
 </script>
+
+</body>
+</html>
