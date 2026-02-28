@@ -1,35 +1,10 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>交代タイマー</title>
-<style>
-body {
-  font-family: sans-serif;
-  text-align: center;
-  padding-top: 50px;
-}
-#msg {
-  font-size: 2em;
-  margin-top: 30px;
-}
-</style>
-</head>
-<body>
-
-<h1>役割交代タイマー</h1>
-<div id="msg">待機中</div>
-
-<audio id="sound">
-  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
-</audio>
-
 <script>
-const members = ["佐藤","鈴木","田中"]; // ←名前をここで変更
+const members = ["佐藤","鈴木","田中"]; 
 const interval = 15 * 60 * 1000;
 
+const start = new Date("2026-02-28T22:57:00"); // ←あなたが設定した開始時刻に合わせる
+
 function update() {
-  const start = new Date("2026-02-28T22:52:00"); // ←開始時刻
   const now = new Date();
   const diff = now - start;
 
@@ -40,15 +15,26 @@ function update() {
 
   const turn = Math.floor(diff / interval);
   const current = members[turn % members.length];
-  document.getElementById("msg").textContent =
-    "現在の担当：" + current;
 
-  document.getElementById("sound").play();
+  const elapsedInCycle = diff % interval;
+  const remaining = interval - elapsedInCycle;
+
+  const minutes = Math.floor(remaining / 60000);
+  const seconds = Math.floor((remaining % 60000) / 1000);
+
+  const formatted =
+    String(minutes).padStart(2, '0') + ":" +
+    String(seconds).padStart(2, '0');
+
+  document.getElementById("msg").innerHTML =
+    "現在の担当：" + current + "<br><br>" +
+    "次の交代まで：" + formatted;
+
+  if (elapsedInCycle < 1000) {
+    document.getElementById("sound").play();
+  }
 }
 
 update();
-setInterval(update, interval);
+setInterval(update, 1000);
 </script>
-
-</body>
-</html>
