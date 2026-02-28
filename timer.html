@@ -35,7 +35,7 @@ body {
 const members = ["坂本","鈴木","田中"];
 const interval = 15 * 60 * 1000;
 
-const start = new Date("2026-02-28T23:36:00");
+const start = new Date("2026-02-28T23:45:00");
 
 function update() {
   const msg = document.getElementById("msg");
@@ -62,20 +62,16 @@ let display =
   "現在の担当：" + current + "<br><br>" +
   "次の交代まで：" +
   String(min).padStart(2, "0") + ":" +
-  String(sec).padStart(2, "0");
+  String(sec).padStart(2, "0") +
+  "<br><br>メンバー<br>";
 
-// 残り1分で交代準備表示
-if (remain <= 60000) {
-  display += "<br><br><strong>交代準備</strong><br>";
-
-  members.forEach(name => {
-    if (name === next) {
-      display += "<span class='next'>★" + name + "★</span>　";
-    } else {
-      display += name + "　";
-    }
-  });
-}
+members.forEach(name => {
+  if (remain <= 60000 && name === next) {
+    display += "<span class='next'>★" + name + "★</span>　";
+  } else {
+    display += name + "　";
+  }
+});
 
 msg.innerHTML = display;
   if (remain > interval - 1000) {
