@@ -19,6 +19,22 @@ body {
   font-weight: bold;
   font-size: 1.3em;
 }
+
+  .member {
+  display: inline-block;
+  padding: 8px 14px;
+  margin: 6px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  font-size: 1.1em;
+}
+
+.next {
+  color: red;
+  font-weight: bold;
+  font-size: 1.3em;
+  border: 3px solid red;
+}
 </style>
 </head>
 
@@ -44,11 +60,17 @@ function update() {
   const now = new Date();
   const diff = now - start;
 
-  if (diff < 0) {
-    const remain = Math.ceil((-diff) / 1000);
-    msg.textContent = "開始まで：" + remain + "秒";
-    return;
-  }
+if (diff < 0) {
+  const remainSec = Math.ceil((-diff) / 1000);
+  const min = Math.floor(remainSec / 60);
+  const sec = remainSec % 60;
+
+  msg.textContent =
+    "開始まで：" +
+    min + "分" +
+    String(sec).padStart(2, "0") + "秒";
+  return;
+}
 
   const turn = Math.floor(diff / interval);
   const current = members[turn % members.length];
@@ -67,9 +89,9 @@ let display =
 
 members.forEach(name => {
   if (remain <= 60000 && name === next) {
-    display += "<span class='next'>★" + name + "★</span>　";
+    display += "<span class='member next'>★" + name + "★</span>";
   } else {
-    display += name + "　";
+    display += "<span class='member'>" + name + "</span>";
   }
 });
 
