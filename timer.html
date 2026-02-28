@@ -58,6 +58,10 @@ function update() {
   const sound = document.getElementById("sound");
 
   const now = new Date();
+  const hour = String(now.getHours()).padStart(2, "0");
+const minute = String(now.getMinutes()).padStart(2, "0");
+const second = String(now.getSeconds()).padStart(2, "0");
+const nowTime = hour + "時" + minute + "分" + second + "秒”;
   const diff = now - start;
 
 if (diff < 0) {
@@ -81,6 +85,8 @@ if (diff < 0) {
   const sec = Math.floor((remain % 60000) / 1000);
 
 let display =
+  let display =
+  "現在時刻：" + nowTime + "<br><br>" +
   "現在の担当：" + current + "<br><br>" +
   "次の交代まで：" +
   String(min).padStart(2, "0") + ":" +
