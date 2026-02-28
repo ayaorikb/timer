@@ -1,83 +1,49 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>交代タイマー</title>
-
-<style>
-body {
-  font-family: sans-serif;
-  text-align: center;
-  padding-top: 40px;
-}
-#msg {
-  font-size: 2em;
-  margin-top: 30px;
-}
-  .next {
-  color: red;
-  font-weight: bold;
-  font-size: 1.3em;
-}
-
-  .member {
-  display: inline-block;
-  padding: 8px 14px;
-  margin: 6px;
-  border: 2px solid #333;
-  border-radius: 8px;
-  font-size: 1.1em;
-}
-
-.next {
-  color: red;
-  font-weight: bold;
-  font-size: 1.3em;
-  border: 3px solid red;
-}
-</style>
-</head>
-
-<body>
-
-<h1>交代タイマー</h1>
-<div id="msg">準備中…</div>
-
-<audio id="sound">
-  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
-</audio>
-
 <script>
-const members = ["坂本","鈴木","田中"];
+const members = ["佐藤","鈴木","田中"];
 const interval = 15 * 60 * 1000;
 
-const start = new Date("2026-02-28T23:45:00");
+/* ==== 開始時刻指定（例：9:00） ==== */
+const start = new Date();
+start.setHours(9, 0, 0, 0);
+if (Date.now() > start.getTime()) {
+  start.setDate(start.getDate() + 1);
+}
 
+/* ==== スリープ防止 ==== */
+let wakeLock = null;
+async function requestWakeLock() {
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+  } catch(e) {}
+}
+document.addEventListener("click", requestWakeLock);
+
+/* ==== メイン更新処理 ==== */
 function update() {
   const msg = document.getElementById("msg");
   const sound = document.getElementById("sound");
 
   const now = new Date();
-  const hour = String(now.getHours()).padStart(2, "0");
-const minute = String(now.getMinutes()).padStart(2, "0");
-const second = String(now.getSeconds()).padStart(2, "0");
-const nowTime = hour + "時" + minute + "分" + second + "秒”;
   const diff = now - start;
 
-if (diff < 0) {
-  const remainSec = Math.ceil((-diff) / 1000);
-  const min = Math.floor(remainSec / 60);
-  const sec = remainSec % 60;
+  const hh = String(now.getHours()).padStart(2,"0");
+  const mm = String(now.getMinutes()).padStart(2,"0");
+  const ss = String(now.getSeconds()).padStart(2,"0");
+  const nowTime = hh + ":" + mm + ":" + ss;
 
-  msg.innerHTML =
-    "現在時刻：" + nowTime + "<br><br>" +
-    "開始まで：" +
-    min + "分" +
-    String(sec).padStart(2, "0") + "秒";
+  /* ===== 開始前 ===== */
+  if (diff < 0) {
+    const remainSec = Math.ceil((-diff) / 1000);
+    const min = Math.floor(remainSec / 60);
+    const sec = remainSec % 60;
 
-  return;
-}
+    msg.innerHTML =
+      "現在時刻：" + nowTime + "<br><br>" +
+      "開始まで：" + min + "分" + String(sec).padStart(2,"0") + "秒";
+    return;
+  }
 
+  /* ===== 開始後 ===== */
   const turn = Math.floor(diff / interval);
   const current = members[turn % members.length];
   const next = members[(turn + 1) % members.length];
@@ -86,24 +52,24 @@ if (diff < 0) {
   const min = Math.floor(remain / 60000);
   const sec = Math.floor((remain % 60000) / 1000);
 
-let display =
   let display =
-  "現在時刻：" + nowTime + "<br><br>" +
-  "現在の担当：" + current + "<br><br>" +
-  "次の交代まで：" +
-  String(min).padStart(2, "0") + ":" +
-  String(sec).padStart(2, "0") +
-  "<br><br>次の担当<br>もどレコオンタイムOK？<br>";
+    "現在時刻：" + nowTime + "<br><br>" +
+    "現在の担当：" + current + "<br><br>" +
+    "次の交代まで：" +
+    String(min).padStart(2,"0") + ":" +
+    String(sec).padStart(2,"0") +
+    "<br><br>メンバー<br>";
 
-members.forEach(name => {
-  if (remain <= 60000 && name === next) {
-    display += "<span class='member next'>★" + name + "★</span>";
-  } else {
-    display += "<span class='member'>" + name + "</span>";
-  }
-});
+  members.forEach(name => {
+    if (remain <= 60000 && name === next) {
+      display += "<span class='member next'>★" + name + "★</span>";
+    } else {
+      display += "<span class='member'>" + name + "</span>";
+    }
+  });
 
-msg.innerHTML = display;
+  msg.innerHTML = display;
+
   if (remain > interval - 1000) {
     sound.play();
   }
@@ -111,29 +77,4 @@ msg.innerHTML = display;
 
 update();
 setInterval(update, 1000);
-
-  // 画面スリープ防止
-let wakeLock = null;
-
-async function requestWakeLock() {
-  try {
-    wakeLock = await navigator.wakeLock.request("screen");
-    console.log("Wake Lock 有効");
-
-    wakeLock.addEventListener("release", () => {
-      console.log("Wake Lock 解除");
-    });
-
-  } catch (err) {
-    console.log("Wake Lock エラー:", err);
-  }
-}
-
-// ユーザー操作後に有効化（iPhone対策）
-document.addEventListener("click", () => {
-  requestWakeLock();
-});
 </script>
-
-</body>
-</html>
