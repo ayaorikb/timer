@@ -1,37 +1,40 @@
 <script>
-const members = ["佐藤","鈴木","田中"]; 
+const members = ["佐藤","鈴木","田中"];
 const interval = 15 * 60 * 1000;
 
-const start = new Date("2026-02-28T22:57:00"); // ←あなたが設定した開始時刻に合わせる
+// ★ 必ず「未来の時刻」にする（今から5分後がおすすめ）
+const start = new Date(Date.now() + 5 * 60 * 1000);
 
 function update() {
+  const msg = document.getElementById("msg");
+  const sound = document.getElementById("sound");
+
+  if (!msg) return;
+
   const now = new Date();
   const diff = now - start;
 
   if (diff < 0) {
-    document.getElementById("msg").textContent = "開始前";
+    const remain = Math.ceil((-diff) / 1000);
+    msg.innerHTML = "開始まで：" + remain + "秒";
     return;
   }
 
   const turn = Math.floor(diff / interval);
   const current = members[turn % members.length];
 
-  const elapsedInCycle = diff % interval;
-  const remaining = interval - elapsedInCycle;
+  const remain = interval - (diff % interval);
+  const min = Math.floor(remain / 60000);
+  const sec = Math.floor((remain % 60000) / 1000);
 
-  const minutes = Math.floor(remaining / 60000);
-  const seconds = Math.floor((remaining % 60000) / 1000);
-
-  const formatted =
-    String(minutes).padStart(2, '0') + ":" +
-    String(seconds).padStart(2, '0');
-
-  document.getElementById("msg").innerHTML =
+  msg.innerHTML =
     "現在の担当：" + current + "<br><br>" +
-    "次の交代まで：" + formatted;
+    "次の交代まで：" +
+    String(min).padStart(2, "0") + ":" +
+    String(sec).padStart(2, "0");
 
-  if (elapsedInCycle < 1000) {
-    document.getElementById("sound").play();
+  if (remain > interval - 1000) {
+    sound.play();
   }
 }
 
