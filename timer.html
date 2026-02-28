@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>交代タイマー</title>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding-top: 50px;
+}
+#msg {
+  font-size: 2em;
+  margin-top: 30px;
+}
+</style>
+</head>
+<body>
+
+<h1>役割交代タイマー</h1>
+<div id="msg">待機中</div>
+
+<audio id="sound">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
+<script>
+const members = ["佐藤","鈴木","田中"]; // ←名前をここで変更
+const interval = 15 * 60 * 1000;
+
+function update() {
+  const start = new Date("2026-02-28T22:20:00"); // ←開始時刻
+  const now = new Date();
+  const diff = now - start;
+
+  if (diff < 0) {
+    document.getElementById("msg").textContent = "開始前";
+    return;
+  }
+
+  const turn = Math.floor(diff / interval);
+  const current = members[turn % members.length];
+  document.getElementById("msg").textContent =
+    "現在の担当：" + current;
+
+  document.getElementById("sound").play();
+}
+
+update();
+setInterval(update, interval);
+</script>
+
+</body>
+</html>
