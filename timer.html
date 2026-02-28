@@ -1,15 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割交代タイマー</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding-top: 30px;
+}
+
+.member {
+  display: inline-block;
+  padding: 8px 14px;
+  margin: 6px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  min-width: 90px;
+}
+
+.next {
+  color: red;
+  font-weight: bold;
+  font-size: 1.3em;
+  border: 3px solid red;
+}
+</style>
+</head>
+
+<body>
+
+<h1>役割交代タイマー</h1>
+
+<div id="msg">読み込み中…</div>
+
+<audio id="sound">
+  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
+</audio>
+
 <script>
 const members = ["佐藤","鈴木","田中"];
 const interval = 15 * 60 * 1000;
 
-/* ==== 開始時刻指定（例：9:00） ==== */
+/* 開始時刻（例：9:00） */
 const start = new Date();
 start.setHours(9, 0, 0, 0);
 if (Date.now() > start.getTime()) {
   start.setDate(start.getDate() + 1);
 }
 
-/* ==== スリープ防止 ==== */
+/* 画面スリープ防止 */
 let wakeLock = null;
 async function requestWakeLock() {
   try {
@@ -18,7 +59,7 @@ async function requestWakeLock() {
 }
 document.addEventListener("click", requestWakeLock);
 
-/* ==== メイン更新処理 ==== */
+/* メイン更新 */
 function update() {
   const msg = document.getElementById("msg");
   const sound = document.getElementById("sound");
@@ -31,7 +72,7 @@ function update() {
   const ss = String(now.getSeconds()).padStart(2,"0");
   const nowTime = hh + ":" + mm + ":" + ss;
 
-  /* ===== 開始前 ===== */
+  /* 開始前 */
   if (diff < 0) {
     const remainSec = Math.ceil((-diff) / 1000);
     const min = Math.floor(remainSec / 60);
@@ -43,7 +84,7 @@ function update() {
     return;
   }
 
-  /* ===== 開始後 ===== */
+  /* 開始後 */
   const turn = Math.floor(diff / interval);
   const current = members[turn % members.length];
   const next = members[(turn + 1) % members.length];
@@ -78,3 +119,6 @@ function update() {
 update();
 setInterval(update, 1000);
 </script>
+
+</body>
+</html>
