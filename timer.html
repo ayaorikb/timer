@@ -85,7 +85,7 @@ let display =
   "次の交代まで：" +
   String(min).padStart(2, "0") + ":" +
   String(sec).padStart(2, "0") +
-  "<br><br>メンバー<br>";
+  "<br><br>次の担当<br>";
 
 members.forEach(name => {
   if (remain <= 60000 && name === next) {
@@ -103,6 +103,28 @@ msg.innerHTML = display;
 
 update();
 setInterval(update, 1000);
+
+  // 画面スリープ防止
+let wakeLock = null;
+
+async function requestWakeLock() {
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+    console.log("Wake Lock 有効");
+
+    wakeLock.addEventListener("release", () => {
+      console.log("Wake Lock 解除");
+    });
+
+  } catch (err) {
+    console.log("Wake Lock エラー:", err);
+  }
+}
+
+// ユーザー操作後に有効化（iPhone対策）
+document.addEventListener("click", () => {
+  requestWakeLock();
+});
 </script>
 
 </body>
