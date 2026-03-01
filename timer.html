@@ -65,10 +65,16 @@
 const members = ["佐藤", "坂本", "田中"];
 const intervalMinutes = 5;
 const startTime = new Date();
+startTime.setHours(22, 50, 0, 0); // 9時00分00秒開始
 
 function updateTimer() {
   const now = new Date();
-
+  
+if (now < startTime) {
+  document.getElementById("remainingTime").textContent =
+    "準備中";
+  return;
+}
   // 現在時刻
   const h = now.getHours();
   const m = String(now.getMinutes()).padStart(2, "0");
