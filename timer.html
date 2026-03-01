@@ -106,6 +106,11 @@ if (now < startTime) {
 
   // 残り時間
   const remainingMs = intervalMs - (elapsedMs % intervalMs);
+  // 次の担当インデックス
+const nextIndex = (currentIndex + 1) % members.length;
+
+// 残り1分未満なら強調
+const isLastMinute = remainingMs <= 60000;
   const remMin = Math.floor(remainingMs / 60000);
   const remSec = Math.floor((remainingMs % 60000) / 1000);
   document.getElementById("remainingTime").textContent =
