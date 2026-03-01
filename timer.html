@@ -56,32 +56,27 @@
 <button id="enableSound">🔊 音を有効にする</button>
 <div id="loading">読み込み中…</div>
 
-<audio id="sound">
-  <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
-</audio>
-
   <div id="currentTime"></div>
 
   <div id="remainingTime"></div>
 
   <div id="currentMember"></div>
-
-　<div id="nextLabel">次の担当</div>
-　<div id="members"></div>
+  <div id="nextLabel">次の担当</div>
+  <div id="members"></div>
   
 <script>
 const members = ["佐藤", "坂本", "田中"];
 const intervalMinutes = 2;
+  
 const startTime = new Date();
-startTime.setHours( 0, 10, 0, 0); // 9時00分00秒開始
+startTime.setHours( 0, 26, 0, 0); // 9時00分00秒開始
 
   // ===== 音の設定 =====
   let audioEnabled = false;
+  let audioContext = null;
   let lastIndex = -1;
   let lastMinuteBeeped = false;
- let audioEnabled = false;
-let audioContext = null;
-
+  
 function playBeep() {
   if (!audioContext) return;
 
@@ -110,7 +105,6 @@ document.getElementById("enableSound")
     audioEnabled = true;
     document.getElementById("enableSound").style.display = "none";
   });
-  })
 
 function updateTimer() {
 
@@ -124,6 +118,7 @@ if (now < startTime) {
     "準備中";
   return;
 }
+  
   // 現在時刻
   const h = now.getHours();
   const m = String(now.getMinutes()).padStart(2, "0");
@@ -151,47 +146,39 @@ if (currentIndex !== lastIndex) {
   const remainingMs = intervalMs - (elapsedMs % intervalMs);
 
   // 残り1分になった瞬間に音を鳴らす
-if (remainingMs <= 60000 && !lastMinuteBeeped) {
-  if (audioEnabled) {
-    beep.play();
-  }
+  if (remainingMs <= 60000 && !lastMinuteBeeped) {
+  if (audioEnabled) playbeep();
   lastMinuteBeeped = true;
 }
   
-  // 次の担当インデックス
-const nextIndex = (currentIndex + 1) % members.length;
-
-// 残り1分未満なら強調
-const isLastMinute = remainingMs <= 60000;
-  const remMin = Math.floor(remainingMs / 60000);
+ const remMin = Math.floor(remainingMs / 60000);
   const remSec = Math.floor((remainingMs % 60000) / 1000);
   document.getElementById("remainingTime").textContent =
     `次の交代まで：${remMin}分${String(remSec).padStart(2, "0")}秒`;
 
-  // メンバー一覧（常に表示）
+  const nextIndex = (currentIndex + 1) % members.length;
+  const isLastMinute = remainingMs <= 60000;
+
   const membersDiv = document.getElementById("members");
   membersDiv.innerHTML = "";
-members.forEach((name, index) => {
-  const span = document.createElement("span");
 
-  if (isLastMinute && index === nextIndex) {
-    span.textContent = "★ " + name;
-    span.style.backgroundColor = "#ffe4e1";
-　　 span.style.border = "2px solid red";
-    span.style.color = "red";
-    span.style.fontSize = "1.3em";
-    span.style.fontWeight = "bold";
-  } else {
-    span.textContent = name;
-  }
+  members.forEach((name, index) => {
+    const span = document.createElement("span");
 
-  membersDiv.appendChild(span);
-});
+    if (isLastMinute && index === nextIndex) {
+      span.textContent = "★ " + name;
+      span.style.backgroundColor = "#ffe4e1";
+      span.style.border = "2px solid red";
+      span.style.color = "red";
+      span.style.fontSize = "1.3em";
+      span.style.fontWeight = "bold";
+    } else {
+      span.textContent = name;
+    }
+    membersDiv.appendChild(span);
+  });
 }
 
 setInterval(updateTimer, 1000);
 updateTimer();
 </script>
-
-</body>
-</html>
