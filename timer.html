@@ -119,11 +119,22 @@ const isLastMinute = remainingMs <= 60000;
   // メンバー一覧（常に表示）
   const membersDiv = document.getElementById("members");
   membersDiv.innerHTML = "";
-  members.forEach(name => {
-    const span = document.createElement("span");
+members.forEach((name, index) => {
+  const span = document.createElement("span");
+
+  if (isLastMinute && index === nextIndex) {
+    span.textContent = "★ " + name;
+    span.style.backgroundColor = "#ffe4e1";
+　　 span.style.border = "2px solid red";
+    span.style.color = "red";
+    span.style.fontSize = "1.3em";
+    span.style.fontWeight = "bold";
+  } else {
     span.textContent = name;
-    membersDiv.appendChild(span);
-  });
+  }
+
+  membersDiv.appendChild(span);
+});
 }
 
 setInterval(updateTimer, 1000);
