@@ -147,7 +147,7 @@ if (currentIndex !== lastIndex) {
 
   // 残り1分になった瞬間に音を鳴らす
   if (remainingMs <= 60000 && !lastMinuteBeeped) {
-  if (audioEnabled) playbeep();
+  if (audioEnabled) playBeep();
   lastMinuteBeeped = true;
 }
   
