@@ -151,10 +151,13 @@ if (currentIndex !== lastIndex) {
   lastMinuteBeeped = true;
 }
   
- const remMin = Math.floor(remainingMs / 60000);
-  const remSec = Math.floor((remainingMs % 60000) / 1000);
-  document.getElementById("remainingTime").textContent =
-    `次の交代まで：${remMin}分${String(remSec).padStart(2, "0")}秒`;
+  // 残り時間（秒単位で計算）
+const remainingSeconds = Math.ceil(remainingMs / 1000);
+const remMin = Math.floor(remainingSeconds / 60);
+const remSec = remainingSeconds % 60;
+
+document.getElementById("remainingTime").textContent =
+  `次の交代まで：${remMin}分${String(remSec).padStart(2, "0")}秒`;
 
   const nextIndex = (currentIndex + 1) % members.length;
   const isLastMinute = remainingMs <= 60000;
