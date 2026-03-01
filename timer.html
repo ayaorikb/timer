@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>役割交代タイマー</title>
+<title>交代タイマー</title>
 
 <style>
 body {
@@ -31,7 +31,7 @@ body {
 
 <body>
 
-<h1>役割交代タイマー</h1>
+<h1>交代タイマー</h1>
 
 <div id="msg">読み込み中…</div>
 
@@ -40,12 +40,12 @@ body {
 </audio>
 
 <script>
-const members = ["佐藤","鈴木","田中"];
-const interval = 15 * 60 * 1000;
+const members = ["坂本","鈴木","田中"];
+const interval = 5 * 60 * 1000;
 
 /* 開始時刻（例：9:00） */
 const start = new Date();
-start.setHours(9, 0, 0, 0);
+start.setHours(22,10, 0, 0);
 if (Date.now() > start.getTime()) {
   start.setDate(start.getDate() + 1);
 }
