@@ -75,6 +75,20 @@ const intervalMinutes = 2;
 const startTime = new Date();
 startTime.setHours(23, 16, 0, 0); // 9時00分00秒開始
 
+  // ===== 音の設定 =====
+  let audioEnabled = false;
+  const beep = new Audio("beep.mp3");
+
+  document.getElementById("enableSound").addEventListener("click", () => {
+    beep.play().then(() => {
+      audioEnabled = true;
+      document.getElementById("enableSound").style.display = "none";
+    }).catch(() => {
+      alert("音を有効にできませんでした");
+    });
+  })
+  let lastMinuteBeeped = false;
+  
 function updateTimer() {
 
   const loading = document.getElementById("loading");
@@ -101,11 +115,26 @@ if (now < startTime) {
 
   // 現在の担当
   const currentIndex = cycle % members.length;
+
+  // 担当が切り替わったらリセット
+if (currentIndex !== lastIndex) {
+  lastIndex = currentIndex;
+  lastMinuteBeeped = false;
+}
   document.getElementById("currentMember").textContent =
     `現在の担当：${members[currentIndex]}`;
 
   // 残り時間
   const remainingMs = intervalMs - (elapsedMs % intervalMs);
+
+  // 残り1分になった瞬間に音を鳴らす
+if (remainingMs <= 60000 && !lastMinuteBeeped) {
+  if (audioEnabled) {
+    beep.play();
+  }
+  lastMinuteBeeped = true;
+}
+  
   // 次の担当インデックス
 const nextIndex = (currentIndex + 1) % members.length;
 
