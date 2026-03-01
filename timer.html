@@ -73,21 +73,43 @@
 const members = ["佐藤", "坂本", "田中"];
 const intervalMinutes = 2;
 const startTime = new Date();
-startTime.setHours( 0, 5, 0, 0); // 9時00分00秒開始
+startTime.setHours( 0, 10, 0, 0); // 9時00分00秒開始
 
   // ===== 音の設定 =====
   let audioEnabled = false;
   let lastIndex = -1;
   let lastMinuteBeeped = false;
-  const beep = new Audio("beep.mp3");
+ let audioEnabled = false;
+let audioContext = null;
 
-  document.getElementById("enableSound").addEventListener("click", () => {
-    beep.play().then(() => {
-      audioEnabled = true;
-      document.getElementById("enableSound").style.display = "none";
-    }).catch(() => {
-      alert("音を有効にできませんでした");
-    });
+function playBeep() {
+  if (!audioContext) return;
+
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = 880; // 音の高さ
+  gain.gain.value = 0.2;
+
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+
+  osc.start();
+  osc.stop(audioContext.currentTime + 0.2); // 0.2秒
+}
+document.getElementById("enableSound")
+  .addEventListener("click", () => {
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    audioEnabled = true;
+    document.getElementById("enableSound").style.display = "none";
+  });
   })
 
 function updateTimer() {
