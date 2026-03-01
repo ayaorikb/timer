@@ -54,7 +54,7 @@
 
 <h1>交代タイマー</h1>
 <button id="soundBtn">🔊 音を有効にする</button>
-<div id="msg">読み込み中…</div>
+<div id="loading">読み込み中…</div>
 
 <audio id="sound">
   <source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg">
@@ -76,6 +76,10 @@ const startTime = new Date();
 startTime.setHours(22, 50, 0, 0); // 9時00分00秒開始
 
 function updateTimer() {
+
+  const loading = document.getElementById("loading");
+  if (loading) loading.style.display = "none";
+
   const now = new Date();
   
 if (now < startTime) {
