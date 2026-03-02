@@ -207,21 +207,32 @@ if (remainingMs <= 30000) {
   const membersDiv = document.getElementById("members");
   membersDiv.innerHTML = "";
 
-  members.forEach((name, index) => {
-    const span = document.createElement("span");
+ members.forEach((name, index) => {
+  const span = document.createElement("span");
 
-    if (isLastMinute && index === nextIndex) {
-      span.textContent = "★ " + name;
-      span.style.backgroundColor = "#ffe4e1";
-      span.style.border = "2px solid red";
+  if (index === nextIndex) {
+
+    span.textContent = "★ " + name;
+    span.style.backgroundColor = "#e0f7ff";
+    span.style.border = "2px solid #007bff";
+    span.style.color = "#007bff";
+    span.style.fontSize = "1.2em";
+    span.style.fontWeight = "bold";
+
+    // 30秒前はさらに強調
+    if (remainingMs <= 30000) {
+      span.style.backgroundColor = "#ffcccc";
+      span.style.border = "3px solid red";
       span.style.color = "red";
-      span.style.fontSize = "1.3em";
-      span.style.fontWeight = "bold";
-    } else {
-      span.textContent = name;
+      span.style.fontSize = "1.4em";
     }
-    membersDiv.appendChild(span);
-  });
+
+  } else {
+    span.textContent = name;
+  }
+
+  membersDiv.appendChild(span);
+});
 }
 
 setInterval(updateTimer, 1000);
