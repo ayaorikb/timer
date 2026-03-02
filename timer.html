@@ -114,16 +114,8 @@ function playBeep() {
   playOnce(0.4);
   playOnce(0.8);
 }
-document.getElementById("enableSound")
-  .addEventListener("click", () => {
 
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
-    }
-   
-    function playBeep30() {
+  function playBeep30() {
   if (!audioContext) return;
 
   const osc = audioContext.createOscillator();
@@ -140,6 +132,15 @@ document.getElementById("enableSound")
   osc.stop(audioContext.currentTime + 0.25);
 }
 
+document.getElementById("enableSound")
+  .addEventListener("click", () => {
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+   
     audioEnabled = true;
     document.getElementById("enableSound").style.display = "none";
   });
@@ -228,7 +229,8 @@ if (remainingMs <= 30000) {
     span.style.color = "#007bff";
     span.style.fontSize = "1.2em";
     span.style.fontWeight = "bold";
-
+  }
+ 
    const warningDiv = document.getElementById("warning");
 
 if (remainingMs <= 30000) {
