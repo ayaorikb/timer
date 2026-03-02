@@ -51,6 +51,15 @@
   margin-bottom: 10px;
   font-weight: bold;
 }
+
+ #warning {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: red;
+  margin-top: 20px;
+  display: none;
+ }
+ 
 </style>
 </head>
 
@@ -67,6 +76,7 @@
   <div id="currentMember"></div>
   <div id="nextLabel">次の担当</div>
   <div id="members"></div>
+  <div id="warning"></div>
   
 <script>
 const members = ["佐藤", "坂本", "田中"];
@@ -219,6 +229,15 @@ if (remainingMs <= 30000) {
     span.style.fontSize = "1.2em";
     span.style.fontWeight = "bold";
 
+   const warningDiv = document.getElementById("warning");
+
+if (remainingMs <= 30000) {
+  warningDiv.textContent = "⚠ まもなく交代　音声オンタイムへ";
+  warningDiv.style.display = "block";
+} else {
+  warningDiv.style.display = "none";
+}
+   
     // 30秒前はさらに強調
     if (remainingMs <= 30000) {
       span.style.backgroundColor = "#ffcccc";
