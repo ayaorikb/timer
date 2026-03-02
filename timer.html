@@ -239,7 +239,7 @@ if (remainingMs <= 30000) {
   if (!blinkInterval) { // 点滅開始
     let flag = false;
     blinkInterval = setInterval(() => {
-      document.body.style.backgroundColor = flag ? "#ffe5e5" : "#fff";
+      document.body.style.backgroundColor = flag ? "#ffe5e5" : "#fff3f3";
       flag = !flag;
     }, 500); // 0.5秒ごとに切替
   }
