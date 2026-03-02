@@ -80,6 +80,7 @@ startTime.setHours( 0, 26, 0, 0); // 9時00分00秒開始
   let audioContext = null;
   let lastIndex = -1;
   let lastMinuteBeeped = false;
+ let last30SecBeeped = false;
   
 function playBeep() {
   if (!audioContext) return;
@@ -111,6 +112,23 @@ document.getElementById("enableSound")
     if (audioContext.state === "suspended") {
       audioContext.resume();
     }
+   
+    function playBeep30() {
+  if (!audioContext) return;
+
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  osc.type = "triangle";     // ← 30秒用は柔らかめ
+  osc.frequency.value = 1200; // 少し高い音
+  gain.gain.value = 0.18;     // 少し小さめ
+
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+
+  osc.start();
+  osc.stop(audioContext.currentTime + 0.25);
+}
 
     audioEnabled = true;
     document.getElementById("enableSound").style.display = "none";
@@ -148,6 +166,7 @@ if (now < startTime) {
 if (currentIndex !== lastIndex) {
   lastIndex = currentIndex;
   lastMinuteBeeped = false;
+  last30SecBeeped = false;
 }
   document.getElementById("currentMember").textContent =
     `現在の担当：${members[currentIndex]}`;
@@ -159,6 +178,12 @@ if (currentIndex !== lastIndex) {
   if (remainingMs <= 60000 && !lastMinuteBeeped) {
   if (audioEnabled) playBeep();
   lastMinuteBeeped = true;
+}
+
+ // 残り30秒になった瞬間に音を鳴らす
+if (remainingMs <= 30000 && !last30SecBeeped) {
+  if (audioEnabled) playBeep30();
+  last30SecBeeped = true;
 }
   
   // 残り時間（秒単位で計算）
