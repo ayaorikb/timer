@@ -217,7 +217,19 @@ if (remainingMs <= 30000) {
 
   const membersDiv = document.getElementById("members");
   membersDiv.innerHTML = "";
+  
+const warningDiv = document.getElementById("warning");
 
+if (warningDiv) {
+  if (remainingMs <= 30000) {
+    warningDiv.textContent = 'まもなく交代';
+    warningDiv.style.display = "block";
+    warningDiv.style.fontSize = "1.6em";
+  } else {
+    warningDiv.style.display = "none";
+  }
+}
+ 
  members.forEach((name, index) => {
   const span = document.createElement("span");
 
@@ -229,19 +241,7 @@ if (remainingMs <= 30000) {
     span.style.color = "#007bff";
     span.style.fontSize = "1.2em";
     span.style.fontWeight = "bold";
-  }
  
-   const warningDiv = document.getElementById("warning");
-
-if (warningDiv) {
-  if (remainingMs <= 30000) {
-    warningDiv.textContent = 'まもなく交代 音声オンタイムへ！';
-    warningDiv.style.display = "block";
-    warningDiv.style.fontSize = "1.6em";
-  } else {
-    warningDiv.style.display = "none";
-  }
-}
    
     // 30秒前はさらに強調
     if (remainingMs <= 30000) {
