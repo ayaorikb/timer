@@ -206,7 +206,6 @@ document.getElementById("remainingTime").textContent =
   `次の交代まで：${remMin}分${String(remSec).padStart(2, "0")}秒`;
 
   const nextIndex = (currentIndex + 1) % members.length;
-  const isLastMinute = remainingMs <= 60000;
  
  // 背景色制御
 if (remainingMs <= 30000) {
