@@ -103,39 +103,17 @@
 <div id="timeRing">
   <svg width="200" height="200">
     <!-- 背景円 -->
-    <circle
-      cx="100"
-      cy="100"
-      r="90"
-      stroke="#ddd"
-      stroke-width="14"
-      fill="none"
-    />
+    <circle cx="100" cy="100" r="90" stroke="#ddd" stroke-width="14" fill="none" />
 
     <!-- 進行リング -->
-    <circle
-      id="ringProgress"
-      cx="100"
-      cy="100"
-      r="90"
-      stroke="#1976d2"
-      stroke-width="14"
-      fill="none"
-      stroke-linecap="round"
-      transform="rotate(-90 100 100)"
-    />
+    <circle id="ringProgress" cx="100" cy="100" r="90" stroke="#1976d2" stroke-width="14"
+            fill="none" stroke-linecap="round" transform="rotate(-90 100 100)" />
 
-    <!-- 中央テキスト（追加） -->
-    <text
-      id="ringName"
-      x="100"
-      y="110"
-      text-anchor="middle"
-      font-size="26"
-      font-weight="bold"
-      fill="#333">
+    <!-- 中央テキスト -->
+    <text id="ringName" x="100" y="90" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">
+      <tspan id="ringLabel" x="100" dy="0">現在の担当</tspan>
+      <tspan id="ringPerson" x="100" dy="28"></tspan>
     </text>
-
   </svg>
 </div>
  
@@ -252,8 +230,7 @@ if (currentIndex !== lastIndex) {
   document.getElementById("currentMember").textContent =
     `現在の担当：${members[currentIndex]}`;
 
- document.getElementById("ringName").textContent =
-  members[currentIndex];
+document.getElementById("ringPerson").textContent = members[currentIndex];
 
   // 残り時間
   const remainingMs = intervalMs - (elapsedMs % intervalMs);
