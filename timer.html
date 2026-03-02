@@ -5,11 +5,13 @@
 <title>交代タイマー</title>
 
 <style>
-  body {
-    background-color: #f0f8ff;
-    font-family: sans-serif;
-    text-align: center;
-  }
+ body {
+  background-color: #f0f8ff;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
 
   #currentTime {
     font-size: 1.2em;
@@ -21,17 +23,15 @@
     margin: 15px;
   }
 
-  #currentMember {
-    font-size: 2em;
-    font-weight: bold;
-    border: 3px solid #333;
-    background-color: #ffe4b5;
-    padding: 15px;
-    margin: 20px auto;
-    width: fit-content;
-    border-radius: 10px;
-  }
-
+#currentMember {
+  font-size: 2.4em;
+  font-weight: bold;
+  border: 4px solid #ff9800;
+  background-color: #fff3cd;
+  padding: 20px 30px;
+  margin: 25px auto;
+  border-radius: 14px;
+}
   #members span {
     display: inline-block;
     border: 1px solid #666;
@@ -40,7 +40,7 @@
     border-radius: 6px;
     background-color: #ffffff;
   }
-
+  
   #nextLabel {
   font-size: 1.2em;
   margin-top: 20px;
@@ -80,18 +80,24 @@ startTime.setHours( 0, 26, 0, 0); // 9時00分00秒開始
 function playBeep() {
   if (!audioContext) return;
 
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
+  const playOnce = (delay) => {
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
 
-  osc.type = "sine";
-  osc.frequency.value = 880; // 音の高さ
-  gain.gain.value = 0.2;
+    osc.type = "square";        // 目立つ音
+    osc.frequency.value = 1000;
+    gain.gain.value = 0.3;
 
-  osc.connect(gain);
-  gain.connect(audioContext.destination);
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
 
-  osc.start();
-  osc.stop(audioContext.currentTime + 0.2); // 0.2秒
+    osc.start(audioContext.currentTime + delay);
+    osc.stop(audioContext.currentTime + delay + 0.3);
+  };
+
+  playOnce(0);
+  playOnce(0.4);
+  playOnce(0.8);
 }
 document.getElementById("enableSound")
   .addEventListener("click", () => {
