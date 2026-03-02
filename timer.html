@@ -77,7 +77,15 @@ body {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.5s linear, stroke 0.3s;
 }
+  
+.blink {
+  animation: blinkAnim 0.5s infinite alternate;
+}
 
+@keyframes blinkAnim {
+  from { background-color: #ffe5e5; }
+  to   { background-color: #fff; }
+}
 </style>
 </head>
 
@@ -126,7 +134,8 @@ let audioContext = null;
 let lastIndex = -1;
 let lastMinuteBeeped = false;
 let last30SecBeeped = false;
-
+let blinkInterval = null; // 点滅用 interval を外で保持
+  
 function playBeep() {
   if (!audioContext) return;
   const playOnce = (delay) => {
@@ -225,12 +234,23 @@ function updateTimer() {
 
   const nextIndex = (currentIndex + 1) % members.length;
 
-  // 背景色制御
-  if (remainingMs <= 30000) {
-    document.body.style.backgroundColor = "#ffe5e5";
-  } else {
-    document.body.style.backgroundColor = "#f0f8ff";
+ // ===== 背景点滅制御 =====
+if (remainingMs <= 30000) {
+  if (!blinkInterval) { // 点滅開始
+    let flag = false;
+    blinkInterval = setInterval(() => {
+      document.body.style.backgroundColor = flag ? "#ffe5e5" : "#fff";
+      flag = !flag;
+    }, 500); // 0.5秒ごとに切替
   }
+} else {
+  // 点滅停止
+  if (blinkInterval) {
+    clearInterval(blinkInterval);
+    blinkInterval = null;
+    document.body.style.backgroundColor = "#f0f8ff"; // 通常色に戻す
+  }
+}
 
   // 警告テキスト
   const warningDiv = document.getElementById("warning");
