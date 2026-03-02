@@ -90,7 +90,7 @@ function playBeep() {
 
     osc.type = "square";        // 目立つ音
     osc.frequency.value = 1000;
-    gain.gain.value = 0.3;
+    gain.gain.value = 0.2;
 
     osc.connect(gain);
     gain.connect(audioContext.destination);
