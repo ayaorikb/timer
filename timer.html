@@ -233,11 +233,14 @@ if (remainingMs <= 30000) {
  
    const warningDiv = document.getElementById("warning");
 
-if (remainingMs <= 30000) {
-  warningDiv.textContent = "⚠ まもなく交代　音声オンタイムへ";
-  warningDiv.style.display = "block";
-} else {
-  warningDiv.style.display = "none";
+if (warningDiv) {
+  if (remainingMs <= 30000) {
+    warningDiv.textContent = 'まもなく交代 音声オンタイムへ！';
+    warningDiv.style.display = "block";
+    warningDiv.style.fontSize = "1.6em";
+  } else {
+    warningDiv.style.display = "none";
+  }
 }
    
     // 30秒前はさらに強調
