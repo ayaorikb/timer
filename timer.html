@@ -89,7 +89,7 @@ function playBeep() {
     const gain = audioContext.createGain();
 
     osc.type = "triangle";        // 目立つ音
-    osc.frequency.value = 1000;
+    osc.frequency.value = 900;
     gain.gain.value = 0.2;
 
     osc.connect(gain);
